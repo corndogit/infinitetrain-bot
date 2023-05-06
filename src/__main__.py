@@ -1,4 +1,5 @@
 import os
+import subprocess
 import disnake
 from disnake import FFmpegPCMAudio
 from disnake.ext import commands
@@ -6,9 +7,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-STREAM_URL = "http://127.0.0.1:8080"  # TODO: run subprocess instead of mooching off piped ffmpeg output
-FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
-                  'options': '-vn'}
+INFINITETRAIN_PATH = os.getenv('INFINITETRAIN_PATH')
+SHELL_COMMAND = f'cd {INFINITETRAIN_PATH} && ./infinitetrain tracks.yml - | ffmpeg -f flac -i - -filter:a "volume=0.3" -f flac -c:a flac -nostats -loglevel 0 -'
+processes = {}
 
 bot = commands.Bot(
     command_prefix=disnake.ext.commands.when_mentioned,
@@ -25,10 +26,13 @@ async def on_ready():
 async def trainroll(inter):
     connected = inter.author.voice
     if not connected:
-        await inter.send("Error: you must be in a voice channel")
+        await inter.send("Error: you must be in a voice channel", ephemeral=True)
         return
 
-    stream = FFmpegPCMAudio(STREAM_URL, **FFMPEG_OPTIONS)
+    infinitetrain = subprocess.Popen(SHELL_COMMAND, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    processes[str(inter.guild)] = infinitetrain
+    stream = FFmpegPCMAudio(infinitetrain.stdout, pipe=True)
+
     voice = disnake.utils.get(bot.voice_clients, guild=inter.guild)
     if voice and voice.is_connected:
         await voice.move_to(connected.channel)
@@ -42,9 +46,14 @@ async def trainroll(inter):
 async def trainstop(inter):
     voice = disnake.utils.get(bot.voice_clients, guild=inter.guild)
     if not voice:
-        await inter.send("Error: bot is not running")
+        await inter.send("Error: bot is not in a voice channel", ephemeral=True)
         return
+
+    if processes[str(inter.guild)]:
+        processes[str(inter.guild)].kill()
     voice.cleanup()
+    await voice.disconnect()
+    await inter.send("Left the voice channel")
 
 
 bot.run(TOKEN)
