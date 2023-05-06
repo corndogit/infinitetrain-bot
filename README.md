@@ -6,6 +6,7 @@ Uses [infinitetrain](https://github.com/aixxe/infinitetrain)
 ## Requirements
 
 - Built infinitetrain added to path
+- FFmpeg
 - Python 3.10+
 
 ## Installation
