@@ -141,3 +141,6 @@ cython_debug/
 # JetBrains
 .idea/
 .vscode/
+
+# song files
+songs/
