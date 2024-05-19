@@ -3,9 +3,7 @@ import subprocess
 import disnake
 from disnake import FFmpegPCMAudio
 from disnake.ext import commands
-from dotenv import load_dotenv
 
-load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 INFINITETRAIN_PATH = os.getenv('INFINITETRAIN_PATH')
 SHELL_COMMAND = f'cd {INFINITETRAIN_PATH} && ./infinitetrain tracks.yml - | ffmpeg -f flac -i - -filter:a "volume=0.3" -f flac -c:a flac -nostats -loglevel 0 -'
