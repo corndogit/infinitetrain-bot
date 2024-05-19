@@ -1,0 +1,7 @@
+services:
+  infinitetrain-bot:
+    image: corndogit/infinitetrain-bot:latest
+    env_file:
+      - .env
+    volumes:
+      - ./songs/Tetsudou-Musume/:/app/infinitetrain/Tetsudou-Musume/
