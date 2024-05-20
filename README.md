@@ -5,40 +5,24 @@ Uses [infinitetrain](https://github.com/aixxe/infinitetrain)
 
 ## Requirements
 
-- Built infinitetrain added to INFINITETRAIN_PATH environment variable
 - FFmpeg
 - Python 3.10+
-- Docker (optional)
+- Docker
+- Built infinitetrain added to `INFINITETRAIN_PATH` environment variable (running local only)
 
-Songs are not included in this repository due to copyright reasons.
+Songs are not included in this repository due to copyright reasons. They should be placed in a folder named 
+Tetsudou-Musume adjacent to the infinitetrain executable.
 
 ## How to Run
 
-### With the Docker CLI
+### With Docker Compose
 
-Recommends using external .env file with Docker due to security reasons.
+- Create a .env file using the provided example.
+- Run `docker compose up -d`
 
-```
-# Pull from docker hub
-$> docker pull misonoyuni/infinitetrain:latest
-
-# Prepare built infinitetrain and songs data in ./data directory, and Setting.env file in root directory
-
-# Settings.env
-DISCORD_TOKEN=INSERT YOUR TOKEN HERE
-INFINITETRAIN_PATH=/app/data/
-
-# Run
-$> docker run --name infinitetrain      \
-              --volume ./data:/app/data \
-              --env-file ./Settings.env \
-              --detach                  \
-              misonoyuni/infinite-train 
-```
- 
-### Without the Docker CLI
+### Without Docker
 
 - Clone this repo
 - Create a new venv and run `pip install -r requirements.txt`
-- Copy the .env example to `/src/` and add your Discord bot token
+- Set the environment variables `DISCORD_TOKEN` and `INFINITETRAIN_PATH`
 - Run `__main__.py`
