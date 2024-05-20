@@ -1,6 +1,6 @@
 services:
   infinitetrain-bot:
-    image: corndogit/infinitetrain-bot:latest
+    image: docker.io/corndogit/infinitetrain-bot:0.1.0
     env_file:
       - .env
     volumes:
