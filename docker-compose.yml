@@ -5,3 +5,4 @@ services:
       - .env
     volumes:
       - ./songs/Tetsudou-Musume/:/app/infinitetrain/Tetsudou-Musume/
+    restart: unless-stopped
